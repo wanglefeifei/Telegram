@@ -1,4 +1,3 @@
-APP_PLATFORM := android-18
+APP_PLATFORM := android-14
 NDK_TOOLCHAIN_VERSION := 4.9
 APP_STL := gnustl_static
-APP_SHORT_COMMANDS :=true
