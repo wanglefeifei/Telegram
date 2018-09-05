@@ -21,6 +21,7 @@ import android.graphics.Point;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.net.VpnService;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -99,6 +100,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import BnetSDK.BNetApplication;
+
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, DialogsActivity.DialogsActivityDelegate {
 
     private boolean finished;
@@ -146,6 +149,9 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     private boolean tabletFullSize;
 
     private Runnable lockRunnable;
+
+    private static final int VPN_REQUEST_CODE = 0x0F;
+    private BNetApplication bnetJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +226,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         if (resourceId > 0) {
             AndroidUtilities.statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-
+        bnetJoin = new BNetApplication(this);
         actionBarLayout = new ActionBarLayout(this);
 
         drawerLayoutContainer = new DrawerLayoutContainer(this);
@@ -590,7 +596,14 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         }
         MediaController.getInstance().setBaseActivity(this, true);
     }
-
+    private void startVpn() {
+        Intent vpnIntent = VpnService.prepare(this);
+        if (vpnIntent != null) {
+            startActivityForResult(vpnIntent, VPN_REQUEST_CODE);//wait user confirmation, will call onActivityResult
+        } else {
+            onActivityResult(VPN_REQUEST_CODE, RESULT_OK, null);
+        }
+    }
     public void switchToAccount(int account, boolean removeAll) {
         if (account == UserConfig.selectedAccount) {
             return;
@@ -2086,6 +2099,11 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             if (layersActionBarLayout.fragmentsStack.size() != 0) {
                 BaseFragment fragment = layersActionBarLayout.fragmentsStack.get(layersActionBarLayout.fragmentsStack.size() - 1);
                 fragment.onActivityResultFragment(requestCode, resultCode, data);
+            }
+        }
+        if (requestCode == VPN_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (bnetJoin != null) {
+                bnetJoin.StartVpvJoin();
             }
         }
     }

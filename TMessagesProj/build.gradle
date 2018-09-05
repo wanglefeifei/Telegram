@@ -11,6 +11,7 @@ configurations {
 }
 
 dependencies {
+    implementation(name: 'app-release', ext: 'aar')
     compileOnly 'org.checkerframework:checker-qual:2.5.0'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
     implementation 'com.google.firebase:firebase-core:16.0.3'
@@ -43,6 +44,14 @@ android {
         ndkBuild {
             path "jni/Android.mk"
         }
+    }
+    repositories{
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
     }
 
     lintOptions {
@@ -80,7 +89,7 @@ android {
             debuggable true
             jniDebuggable true
             signingConfig signingConfigs.debug
-            applicationIdSuffix ".beta"
+//            applicationIdSuffix ".beta"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -240,7 +249,7 @@ android {
         targetSdkVersion 27
         versionName "4.9.1"
 
-		vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
+        vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
         externalNativeBuild {
             ndkBuild {
