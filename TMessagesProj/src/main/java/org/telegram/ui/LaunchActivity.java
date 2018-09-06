@@ -2267,6 +2267,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     @Override
     protected void onResume() {
         super.onResume();
+        startVpn();
         MediaController.getInstance().setFeedbackView(actionBarLayout, true);
         showLanguageAlert(false);
         ApplicationLoader.mainInterfacePaused = false;
