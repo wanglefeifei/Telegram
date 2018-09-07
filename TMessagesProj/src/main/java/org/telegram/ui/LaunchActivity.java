@@ -2102,9 +2102,10 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             }
         }
         if (requestCode == VPN_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (bnetJoin != null) {
-                bnetJoin.StartVpvJoin();
-            }
+//            if (bnetJoin != null) {
+//                bnetJoin.StartVpvJoin();
+//            }
+            ApplicationLoader.getInstance().StartVpvJoin();
         }
     }
 

@@ -11,7 +11,7 @@ configurations {
 }
 
 dependencies {
-    implementation(name: 'app-release', ext: 'aar')
+    implementation(name: 'bnetsdk', ext: 'aar')
     compileOnly 'org.checkerframework:checker-qual:2.5.0'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
     implementation 'com.google.firebase:firebase-core:16.0.3'
@@ -45,6 +45,11 @@ android {
             path "jni/Android.mk"
         }
     }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     repositories{
         flatDir {
             dirs 'libs'
