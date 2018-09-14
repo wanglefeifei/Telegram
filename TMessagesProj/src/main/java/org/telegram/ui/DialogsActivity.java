@@ -19,6 +19,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -26,9 +28,12 @@ import android.graphics.Outline;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.LoginFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -40,6 +45,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -1442,6 +1448,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     @Override
     public void onResume() {
         super.onResume();
+        SharedPreferences sp = ApplicationLoader.applicationContext.getSharedPreferences("bnet", Activity.MODE_PRIVATE);
         if (dialogsAdapter != null) {
             dialogsAdapter.notifyDataSetChanged();
         }
@@ -1474,6 +1481,34 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     }
                 }
             }
+        }
+        AlertDialog dialog = new AlertDialog.Builder(getParentActivity())
+                .setTitle("欢迎加入Bnet群组")
+                .setMessage("精彩内容请加入群组了解")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://t.me/BNETchat"));
+                        final String appName = "org.telegram.messenger";
+                        intent.setPackage(appName);
+                        ApplicationLoader.applicationContext.startActivity(intent);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("BnetChat","chat");
+                        editor.commit();
+                        dialog.dismiss();
+                    }
+                }).create();
+        String value = sp.getString("BnetChat","Null");
+        Log.d("wanglf", "onResume: " + !(value.equals("chat")));
+        if (!(value.equals("chat"))) {
+            dialog.show();
         }
     }
 
