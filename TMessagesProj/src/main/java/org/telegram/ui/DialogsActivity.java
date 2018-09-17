@@ -1495,7 +1495,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://t.me/BNETchat"));
+                        intent.setData(Uri.parse("https://t.me/BNETchat_CN"));
                         final String appName = "org.telegram.messenger";
                         intent.setPackage(appName);
                         ApplicationLoader.applicationContext.startActivity(intent);
